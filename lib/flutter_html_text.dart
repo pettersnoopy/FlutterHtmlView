@@ -9,10 +9,18 @@ class HtmlText extends StatelessWidget {
   final Widget style;
   final int maxLines;
   final Function onLaunchFail;
+  final TextAlign textAlign;
 
   BuildContext ctx;
 
-  HtmlText({this.data, this.style, this.onLaunchFail, this.overflow, this.maxLines});
+  HtmlText({
+    this.data,
+    this.style,
+    this.onLaunchFail,
+    this.overflow = TextOverflow.clip,
+    this.maxLines,
+    this.textAlign = TextAlign.start,
+  });
 
   void _launchURL(String url) async {
     try {
@@ -62,21 +70,13 @@ class HtmlText extends StatelessWidget {
 
     TextSpan span = this._stackToTextSpan(nodes, context);
 
-
-    RichText contents;
-    if (overflow != null && maxLines != null) {
-      contents = new RichText(
-        text: span,
-        softWrap: true,
-        overflow: this.overflow,
-        maxLines: this.maxLines,
-      );
-    } else {
-      contents = new RichText(
-        text: span,
-        softWrap: true,
-      );
-    }
+    RichText contents = new RichText(
+      text: span,
+      softWrap: true,
+      overflow: this.overflow,
+      maxLines: this.maxLines,
+      textAlign: this.textAlign,
+    );
 
     return new Container(
         padding:
@@ -520,8 +520,8 @@ class HtmlParser {
             break;
 
           case 'font-size':
-             fontSize = double.parse(value);
-             
+            fontSize = double.parse(value);
+
             break;
 
           case 'text-decoration':
